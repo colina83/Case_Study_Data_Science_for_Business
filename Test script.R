@@ -1,0 +1,1 @@
+######## Case Study: "Solid as Steel: Production Planning at thysenkrupp"
