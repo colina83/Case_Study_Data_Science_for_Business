@@ -14,7 +14,7 @@ all(e == d) # JUst checking that all values are the same in both datasets
 
 #2.- Information regarding size and Variables  ##
 
-dim(d) # Number of Vaiables -> Rows (Observations ) & Variables
+dim(d) # Number of Variables -> Rows (Observations ) & Variables
 
 names(d) # Variable Names
 
