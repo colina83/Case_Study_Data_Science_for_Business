@@ -12,6 +12,8 @@ library(Hmisc)
 library(jtools)
 library(UsingR)
 library(arsenal)
+library(dplyr)
+library(stringr)
 
 # Import the data from an excel file
 ThyssenKrupp_PPL_Data_Final_20150513 <- read_excel("ThyssenKrupp_PPL Data_Final_20150513.xls")
@@ -57,3 +59,21 @@ barplot(height = c(sum(d1$`thickness 1`), sum(d1$`thickness 2`), sum(d1$`thickne
         main = "Frequency of Thickness")
 
 #A.1c Minimum, average, maximum values of delta throughput and RTR
+#Optimize data frame
+c.data <- data.frame(d1$`delta throughput`, d1$`run time ratio`)
+c.data
+summary(c.data)
+#Delta throughput (Min: -661.83, Average: 15.79, Max: 730.28)
+#RTR (Min: 21.67, Average: 93.54, Max: 100.00)
+
+#A.1d Are there shifts during which only steel of grade 1 or 
+#steel only of grade 2 is processed?
+#Optimize data frame
+d.data <- data.frame(d1$`grade 1`, d1$`grade 2`, d1$`grade 3`, d1$`grade 4`, d1$`grade 5`)
+d.data
+#Convert all to logical
+cols <- sapply(d.data, is.numeric)
+cols
+d.data[,cols] <- lapply(d.data[,cols],as.logical)
+head(d.data)
+#Filter rows
