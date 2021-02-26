@@ -10,6 +10,7 @@ library(tidyverse)
 library(lmtest)
 library(sandwich)
 library(mctest)
+library(ggplot2)
 
 #1.- Uploading Data to R
 
@@ -54,11 +55,16 @@ t1 <- sum(d$thickness_1)
 summary(d$MPT)
 
 #2.- Which is the most commen and least common
-sum(d$thickness_1)/sum(d$Total_Strips)*100
-sum(d$thickness_2)/sum(d$Total_Strips)*100
-sum(d$thickness_3)/sum(d$Total_Strips)*100
+a = sum(d$thickness_1)/sum(d$Total_Strips)*100
+b = sum(d$thickness_2)/sum(d$Total_Strips)*100
+c = sum(d$thickness_3)/sum(d$Total_Strips)*100
+## Thickness 2 is the most common and thickness 3 is the least common
+
+
 ## FC to create graph
-barplot(c(sum(d$thickness_1)/sum(d$Total_Strips)*100,sum(d$thickness_2)/sum(d$Total_Strips)*100,sum(d$thickness_3)/sum(d$Total_Strips)*100))
+barplot(c(a,b,c), b,col=c("darkblue","lightblue","gray"), main = "Thickness Values", xlab = "Thickness", legend = c("Thickness 1", "Thickness 2", "Thickness 3"))
+
+
 
 #3 Values of delta
 par(mfrow =c(1,2))
@@ -66,6 +72,9 @@ boxplot(summary(d$run_time_ratio))
 boxplot(summary(d$delta_throughput))
 
 ## Add a summary table, and make the plot prettier 
+
+
+
 
 #####################################################
 
@@ -80,9 +89,12 @@ table(d$grade_rest == 100)
 
 ## 2.- Can the 
 par(mfrow =c(1,1))
+
 plot(d$delta_throughput ~ d$run_time_ratio, xlab="RTR", ylab="Delta Throughput", main="Scatterplot Delta Througput")
 lm1 <- lm(d$delta_throughput ~ d$run_time_ratio)
 ## Add color to all points with high MPT above 41
+
+
 abline(lm1,col = "red")
 abline(h= 0,col ="black") # Points below zero 
 summary(lm1)
