@@ -27,7 +27,6 @@ d$shift <- str_remove(d$shift,"06:00:00")
 d$shift <- str_remove(d$shift,"14:00:00")
 
 
-
 #4 Exploratory Data Analysis and Plots
 
 #######################################################
@@ -50,4 +49,5 @@ sum(d$`thickness 3`)/sum(d$Total_Strips)*100
 summary(d$`run time ratio`)
 summary(d$MPT)
 
-#4 & % 5 are just questions
+
+#####################################################
