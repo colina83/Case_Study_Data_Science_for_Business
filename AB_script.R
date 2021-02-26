@@ -3,8 +3,12 @@
 
 #Import Libraries
 library(Hmisc)
+library(Rmisc)
 library(jtools)
+library(tidyverse)
 library(UsingR)
+library(lmtest)
+
 
 rm(list=ls())
 
@@ -34,10 +38,11 @@ dCS$`shift 4`<-as.factor(dCS$`shift 4`)
 dCS$`shift 5`<-as.factor(dCS$`shift 5`)
 
 # first glance on the data
-View(dCS)
+View(d1)
 str(dCS)
 summary(dCS)
 
+table(d1$`grade 1`==100)
 # plausibility checks:
 # weekday: number of weekdays within 6 months is unequal (Tuesday:only 63 observations, Friday/Saturday/Sunday: 74 observations)
       # shifts were omitted by Schultze by missing data or obviously erroneous data.
