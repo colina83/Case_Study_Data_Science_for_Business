@@ -112,7 +112,7 @@ summary(lm_old)
 # Test - heteroskedasticity - Removal of Grade 3
 # Test Pass - Model with Grade 1 and Grade 5 (Final)
 
-lm_new <- lm(d$delta_throughput ~ d$thickness_1+ d$thickness_2 + d$thickness_3 + d$width_1 + d$width_3 + d$grade_1  + d$grade_5 + d$run_time_ratio)
+lm_new <- lm(delta_throughput ~ thickness_1+ thickness_2 + thickness_3 + width_1 + width_3 + grade_1  + grade_5 + run_time_ratio, data = d)
 summary(lm_new)
 
 # Plotting to see the dispersion between the fitted values (estimations) and the residuals (errors)
@@ -130,19 +130,36 @@ coeftest(lm_new, vcov = vcovHC(lm_new,"HC1"))
 imcdiag(lm_new) # Low VIF's no correlation
 
 ##########
-#5.-  Confidence Interval
+#5.-  Confidence Interval (90%) 
+# Coefficient for run_time_ratio = 4.7 to 6.01 
+# This means that for each increase in percentage of RTR (Efficiency), we se an increase in the delta throughput of 5.40 
 
-confint(lm7, level = 0.90)
+confint(lm_new, level = 0.90)
 
 #############################
 #6.- Change in delta throughput 
 
-delta_1_3 <-  19.2473 - 9.8261 + 9.25
-## The estimate delta is 18.67 
+delta_1_3 <-  15.8708 + 3.4007 - 6.9680 + 6.4173 
+delta_1_3
 
 
+## 7.- Production Forecast - Delta Throughput (tons) Estimation per shift for the month of May 
+## The estimate for change delta throughput due to change in thickness and width (from 1 to 3) is 18.72 
+# Creating a dataframe for each individual value of X (independent variables)
+
+
+new <- data.frame(thickness_1 = 996/84, thickness_2 = 1884/84,thickness_3 = 434/84,width_1 = 1242/84,width_3 = 881/84,grade_1 = 109/3314,grade_5 =121/3314,run_time_ratio = 86)
+
+## The prediction is -14.66 tons average delta through per shift for the month of May
+predict(lm_new, newdata = new,  interval="prediction")
+
+predict(lm_new, newdata = new,  interval="confidence")
+hist(d$delta_throughput)
+abline(v= -14.7,col ="red")
 ###############
 
-
+##8.- Provide 90% confidence interval for the average delta throughput for 90% interval
+predict(lm_new, newdata = new,  interval="confidence", level = 0.9)
+# Boundary level between -24.79 and -4.54
 
 
