@@ -1,10 +1,28 @@
 ######## R Script A.Bürger
 ######## Case Study: "Solid as Steel: Production Planning at thysenkrupp"
 
-# Load the data from Excel files
+#Import Libraries
+library(Hmisc)
+library(jtools)
+library(UsingR)
+
 rm(list=ls())
+
+# check current working directory
 getwd()
-dCS<-ThyssenKrupp_PPL_Data_Final_20150513
+
+# load the 2 data files (different formats)
+ThyssenKrupp_PPL_Data_Final_20150513 <- read_excel("ThyssenKrupp_PPL Data_Final_20150513.xls")
+ThyssenKrupp_Data <- readRDS("ThyssenKrupp_Data.rds")
+
+#Rename data set for usability
+d1<-ThyssenKrupp_PPL_Data_Final_20150513
+d2<-ThyssenKrupp_Data
+
+#3 Cleaning & Preparing Data
+## 3.1 - identify variables that needs to be converted to factors (Day & Night Shift)
+## 3.2 - Cleanup the date variable, we only need the date, the time is irrelevant
+## 3.3 - Removing variables that won't be use in the study
 
 # convert characters of weekday, shift type and binary variables for shift group into factors
 dCS$weekday<-as.factor(dCS$weekday)
