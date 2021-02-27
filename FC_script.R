@@ -11,6 +11,7 @@ library(lmtest)
 library(sandwich)
 library(mctest)
 library(ggplot2)
+library(expss)
 
 #1.- Uploading Data to R
 
@@ -48,7 +49,7 @@ Average_strips <- mean(d$Total_Strips)
 t1 <- sum(d$thickness_1)
 summary(d$MPT)
 
-#2.- Which is the most commen and least common
+#1.b- Which is the most commen and least common
 a = sum(d$thickness_1)/sum(d$Total_Strips)*100
 b = sum(d$thickness_2)/sum(d$Total_Strips)*100
 c = sum(d$thickness_3)/sum(d$Total_Strips)*100
@@ -56,7 +57,9 @@ c = sum(d$thickness_3)/sum(d$Total_Strips)*100
 
 
 ## FC to create graph
-barplot(c(a,b,c), b,col=c("darkblue","lightblue","gray"), main = "Thickness Values", xlab = "Thickness", legend = c("Thickness 1", "Thickness 2", "Thickness 3"))
+jpeg('1b.jpg')
+Bar_Plot_Q1b <- barplot(c(a,b,c), b,col=c("darkblue","lightblue","gray"), main = "Thickness Values", xlab = "Thickness", legend = c("Thickness 1", "Thickness 2", "Thickness 3"))
+dev.off()
 
 
 
@@ -68,7 +71,9 @@ boxplot(summary(d$delta_throughput))
 ## Add a summary table, and make the plot prettier 
 
 
-
+Delta_Throughput_Summary <- summary(d$delta_throughput)
+Run_Time_Ratio <- summary(d$run_time_ratio)
+rbind(table_DT,table_TR)
 
 #####################################################
 
@@ -160,7 +165,7 @@ new <- data.frame(thickness_1 = 996/84, thickness_2 = 1884/84,thickness_3 = 434/
 predict(lm_new, newdata = new,  interval="prediction")
 
 ## Prediction Plot delta-Throughput for Schuze's prediction (86%)
-pred.int <- predict(lm_new, newdata = new, interval = "prediction")
+pred.int <- predict(lm_new, interval = "prediction") 
 
 mydata <- cbind(d, pred.int)
 p <- ggplot(mydata,aes(run_time_ratio,delta_throughput)) + geom_point()
@@ -168,9 +173,6 @@ p
 
 p + geom_line(aes(y = lwr), color = "red", linetype = "dashed")+
   geom_line(aes(y = upr), color = "red", linetype = "dashed")
-
-
-
 
 predict(lm_new, newdata = new,  interval="confidence")
 hist(d$delta_throughput)
