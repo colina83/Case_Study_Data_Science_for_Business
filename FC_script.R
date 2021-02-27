@@ -62,11 +62,12 @@ Bar_Plot_Q1b <- barplot(c(a,b,c), b,col=c("darkblue","lightblue","gray"), main =
 dev.off()
 
 
-
-#3 Values of delta
+#1.C Values of delta
 par(mfrow =c(1,2))
 boxplot(summary(d$run_time_ratio))
 boxplot(summary(d$delta_throughput))
+
+
 
 ## Add a summary table, and make the plot prettier 
 
