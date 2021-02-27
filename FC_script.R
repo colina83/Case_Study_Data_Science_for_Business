@@ -17,20 +17,14 @@ library(ggplot2)
 d <- ThyssenKrupp_PPL_Data_Final_20150513 # Excel File
 e <- ThyssenKrupp_Data # RDS File from 
 all(e == d) # JUst checking that all values are the same in both datasets
-
+#Arrange the names of variables
+names(d) <- gsub(" ", "_", names(d))
 #2.- Information regarding size and Variables  ##
 
 dim(d) # Number of Variables -> Rows (Observations ) & Variables
 
 names(d) # Variable Names
 table(d$shift_type)
-
-#Arrange the names of variables
-names(d) <- gsub(" ", "_", names(d))
-
-#add a new colum with a constant value
-d$Schultz_Estimate = rep(86)
-
 
 #3.- Cleaning & Preparing Data
 ## 3.1 - identify variables that needs to be converted to factors (Day & Night Shift)
@@ -165,6 +159,19 @@ new <- data.frame(thickness_1 = 996/84, thickness_2 = 1884/84,thickness_3 = 434/
 ## The prediction is -14.66 tons average delta through per shift for the month of May
 predict(lm_new, newdata = new,  interval="prediction")
 
+## Prediction Plot delta-Throughput for Schuze's prediction (86%)
+pred.int <- predict(lm_new, newdata = new, interval = "prediction")
+
+mydata <- cbind(d, pred.int)
+p <- ggplot(mydata,aes(run_time_ratio,delta_throughput)) + geom_point()
+p
+
+p + geom_line(aes(y = lwr), color = "red", linetype = "dashed")+
+  geom_line(aes(y = upr), color = "red", linetype = "dashed")
+
+
+
+
 predict(lm_new, newdata = new,  interval="confidence")
 hist(d$delta_throughput)
 abline(v= -14.7,col ="red")
@@ -173,5 +180,18 @@ abline(v= -14.7,col ="red")
 ##8.- Provide 90% confidence interval for the average delta throughput for 90% interval
 predict(lm_new, newdata = new,  interval="confidence", level = 0.9)
 # Boundary level between -24.79 and -4.54
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
