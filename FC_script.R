@@ -84,11 +84,8 @@ table(d$grade_rest == 100)
 ##grade 1, 4, 5  and rest have 100 %
 
 ## 2.- Can the RTR Theory explain deviations
-
-par(mfrow=c(1,1))
 valcol <- (d$MPT + abs(min(d$MPT)))/max(d$MPT + abs(min(d$MPT)))
 # This variable is to identify the low MPT values in light blue and the high MPT values in darker color
-
 plot(d$delta_throughput ~ d$run_time_ratio, xlab="RTR", ylab="Delta Throughput", main="Scatterplot Delta Througput", col = rgb(0, 0, valcol))
 abline(h= 0,col ="black")
 lm_dt <- lm(d$delta_throughput ~ d$run_time_ratio)
@@ -96,58 +93,47 @@ abline(lm_dt,col = "red")
 abline(h= 0,col ="black") # Points below zero 
 summary(lm_dt)
 
-## Add color to all points with high MPT above 41
-
-
 
 #3.- MPT
 plot(d$delta_throughput ~ d$MPT, xlab = "MPT", ylab = "Delta Throughput", main = "Scatterplot")
 lm_mpt <- lm(d$delta_throughput ~ d$MPT)
-## Add color to all points with high MPT above 41
 abline(lm_mpt,col = "red")
 
-summary(lm_mpt)
 
-
-# y = Delta Throughput
-# Possible X = Shift,Shift Type, thickness, width, 
 
 plot(d$delta_throughput ~ d$Total_Strips, xlab="Number of Strips per Shift", ylab="Delta Throughput", main="Scatterplot Delta Througput")
-plot(d$delta_throughput ~ d$run_time_ratio, xlab="RTR", ylab="Delta Throughput", main="Scatterplot Delta Througput")
 
-## OLD
-lm_old <- lm(d$delta_throughput ~ d$thickness_1+ d$thickness_2 + d$thickness_3 + d$width_1 + d$width_2 + d$run_time_ratio)
-summary(lm_old)
-
-#NEW MODEL !! -> 
+# 4.- Regression model to predict delta throughput
+# The question alludes that all independent variables should be based on the characteristic of the strips
+# We did not include MPT (meters per ton), a dimension indicator, but a theoretical factor calculated by the engineers
+# Schulze did not account for MPT, so we based our models on the characteristics of the material
 # We have left thickness 1 to 3 and Width and Width3 , as this complements each other to account to a total number of strips
 # Grade is significant, and we have included 3 variables out of 6 
 # Test - heteroskedasticity - Removal of Grade 3
 # Test Pass - Model with Grade 1 and Grade 5 (Final)
 
-lm_new <- lm(delta_throughput ~ thickness_1+ thickness_2 + thickness_3 + width_1 + width_3 + grade_1  + grade_5 + run_time_ratio, data = d)
-summary(lm_new)
+lm_final <- lm(delta_throughput ~ thickness_1+ thickness_2 + thickness_3 + width_1 + width_3 + grade_1  + grade_5 + run_time_ratio, data = d)
+summary(lm_final)
 
 # Plotting to see the dispersion between the fitted values (estimations) and the residuals (errors)
-plot(fitted(lm_old),residuals(lm_old))
 plot(fitted(lm_new),residuals(lm_new))
 
 
 #Breusch-Pagan Test, small p-value, we can assume, we have to reject H:0 
-bptest(lm_new)
+bptest(lm_final)
 
 # We are testing heteroskedasticity,heteroscedasticity is the absence of homoscedasticity.  
-coeftest(lm_new, vcov = vcovHC(lm_new,"HC1"))
+coeftest(lm_final, vcov = vcovHC(lm_new,"HC1"))
 
 # Testing Multi-Collinearity 
-imcdiag(lm_new) # Low VIF's no correlation
+imcdiag(lm_final) # Low VIF's no correlation
 
 ##########
 #5.-  Confidence Interval (90%) 
 # Coefficient for run_time_ratio = 4.7 to 6.01 
 # This means that for each increase in percentage of RTR (Efficiency), we se an increase in the delta throughput of 5.40 
 
-confint(lm_new, level = 0.90)
+confint(lm_final, level = 0.90)
 
 #############################
 #6.- Change in delta throughput 
@@ -164,19 +150,11 @@ delta_1_3
 new <- data.frame(thickness_1 = 996/84, thickness_2 = 1884/84,thickness_3 = 434/84,width_1 = 1242/84,width_3 = 881/84,grade_1 = 109/3314,grade_5 =121/3314,run_time_ratio = 86)
 
 ## The prediction is -14.66 tons average delta through per shift for the month of May
-predict(lm_new, newdata = new,  interval="prediction")
+predict(lm_final, newdata = new,  interval="prediction")
 
 ## Prediction Plot delta-Throughput for Schuze's prediction (86%)
-pred.int <- predict(lm_new, interval = "prediction") 
+pred.int <- predict(lm_final, interval = "prediction") 
 
-mydata <- cbind(d, pred.int)
-p <- ggplot(mydata,aes(run_time_ratio,delta_throughput)) + geom_point()
-p
-
-p + geom_line(aes(y = lwr), color = "red", linetype = "dashed")+
-  geom_line(aes(y = upr), color = "red", linetype = "dashed")
-
-predict(lm_new, newdata = new,  interval="confidence")
 hist(d$delta_throughput)
 abline(v= -14.7,col ="red")
 ###############
@@ -184,6 +162,9 @@ abline(v= -14.7,col ="red")
 ##8.- Provide 90% confidence interval for the average delta throughput for 90% interval
 predict(lm_new, newdata = new,  interval="confidence", level = 0.9)
 # Boundary level between -24.79 and -4.54
+
+####################################################################
+# Appendix Statistics ###
 
 
 
