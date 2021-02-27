@@ -166,11 +166,11 @@ predict(lm_new, newdata = new,  interval="confidence", level = 0.9)
 ####################################################################
 # Appendix Statistics ###
 
-
-
-
-
-
+par(mfrow = c(2,2))
+hist(main = "Run Time Ratio", xlab = "Run Time Ratio", d$run_time_ratio)
+hist(main = "MPT", xlab = "MPT", d$MPT)
+hist(main = "Total Strips", xlab = "Total Strips", d$Total_Strips)
+hist(main = "Throughput", xlab = "Throughput", d$throughput)
 
 
 
