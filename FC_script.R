@@ -49,7 +49,7 @@ Average_strips <- mean(d$Total_Strips)
 t1 <- sum(d$thickness_1)
 summary(d$MPT)
 
-#1.b- Which is the most commen and least common
+#1.b- Which is the most common and least common
 a = sum(d$thickness_1)/sum(d$Total_Strips)*100
 b = sum(d$thickness_2)/sum(d$Total_Strips)*100
 c = sum(d$thickness_3)/sum(d$Total_Strips)*100
@@ -66,11 +66,7 @@ dev.off()
 par(mfrow =c(1,2))
 boxplot(summary(d$run_time_ratio))
 boxplot(summary(d$delta_throughput))
-
-
-
 ## Add a summary table, and make the plot prettier 
-
 
 Delta_Throughput_Summary <- summary(d$delta_throughput)
 Run_Time_Ratio <- summary(d$run_time_ratio)
@@ -79,33 +75,38 @@ rbind(table_DT,table_TR)
 #####################################################
 
 table(d$grade_1 == 100)
-table(d$grade_1)
-table(d$grade_2 == 81.25)
-table(d$grade_2)
+table(d$grade_2 == 100)
 table(d$grade_3 == 100)
 table(d$grade_4 == 100)
 table(d$grade_5 == 100)
 table(d$grade_rest == 100)
 
-## 2.- Can the 
-par(mfrow =c(1,1))
+##grade 1, 4, 5  and rest have 100 %
 
-plot(d$delta_throughput ~ d$run_time_ratio, xlab="RTR", ylab="Delta Throughput", main="Scatterplot Delta Througput")
-lm1 <- lm(d$delta_throughput ~ d$run_time_ratio)
+## 2.- Can the RTR Theory explain deviations
+
+par(mfrow=c(1,1))
+valcol <- (d$MPT + abs(min(d$MPT)))/max(d$MPT + abs(min(d$MPT)))
+# This variable is to identify the low MPT values in light blue and the high MPT values in darker color
+
+plot(d$delta_throughput ~ d$run_time_ratio, xlab="RTR", ylab="Delta Throughput", main="Scatterplot Delta Througput", col = rgb(0, 0, valcol))
+abline(h= 0,col ="black")
+lm_dt <- lm(d$delta_throughput ~ d$run_time_ratio)
+abline(lm_dt,col = "red")
+abline(h= 0,col ="black") # Points below zero 
+summary(lm_dt)
+
 ## Add color to all points with high MPT above 41
 
 
-abline(lm1,col = "red")
-abline(h= 0,col ="black") # Points below zero 
-summary(lm1)
 
 #3.- MPT
 plot(d$delta_throughput ~ d$MPT, xlab = "MPT", ylab = "Delta Throughput", main = "Scatterplot")
-lm1 <- lm(d$delta_throughput ~ d$MPT)
+lm_mpt <- lm(d$delta_throughput ~ d$MPT)
 ## Add color to all points with high MPT above 41
-abline(lm1,col = "red")
+abline(lm_mpt,col = "red")
 
-summary(lm1)
+summary(lm_mpt)
 
 
 # y = Delta Throughput
