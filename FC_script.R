@@ -13,29 +13,29 @@ library(mctest)
 library(ggplot2)
 library(expss)
 
-#1.- Uploading Data to R
+#Uploading Data to R
 
 d <- ThyssenKrupp_PPL_Data_Final_20150513 # Excel File
 e <- ThyssenKrupp_Data # RDS File from 
 all(e == d) # JUst checking that all values are the same in both datasets
 #Arrange the names of variables
 names(d) <- gsub(" ", "_", names(d))
-#2.- Information regarding size and Variables  ##
+#Information regarding size and Variables  ##
 
 dim(d) # Number of Variables -> Rows (Observations ) & Variables
 
 names(d) # Variable Names
 table(d$shift_type)
 
-#3.- Cleaning & Preparing Data
-## 3.1 - identify variables that needs to be converted to factors (Day & Night Shift)
-## 3.2 - Cleanup the date variable, we only need the date
+#Cleaning & Preparing Data
+## identify variables that needs to be converted to factors (Day & Night Shift)
+## Cleanup the date variable, we only need the date
 d$shift <- str_remove(d$shift,"22:00:00")
 d$shift <- str_remove(d$shift,"06:00:00")
 d$shift <- str_remove(d$shift,"14:00:00")
 
 
-#4 Exploratory Data Analysis and Plots
+#Exploratory Data Analysis and Plots
 
 #######################################################
 
