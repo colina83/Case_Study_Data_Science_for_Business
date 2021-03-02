@@ -1,3 +1,6 @@
+Website
+https://casestudy1.tiiny.site/
+
 ---
 title: "Production Planning at Thyssenkrupp Case Study"
 output:
